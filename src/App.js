@@ -1,25 +1,41 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { Button, Container } from '@mui/material';
+import SearchAppBar from './components/SearchAppBar';
+import DisplayJobs from './components/DisplayJobs';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [darkMode, setDarkMode] = useState(true);
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? 'dark' : 'light',
+    },
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <SearchAppBar />
+        <Container maxWidth="xl">
+          <DisplayJobs />
+        </Container>
+        <Button
+          sx={{
+            position: 'fixed',
+            bottom: 12,
+            left: 12,
+          }}
+          variant="contained"
+          onClick={() => setDarkMode(!darkMode)}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          Toggle {darkMode ? 'LIGHT' : 'DARK'}
+        </Button>
+      </ThemeProvider>
+    </>
   );
-}
+};
 
 export default App;
