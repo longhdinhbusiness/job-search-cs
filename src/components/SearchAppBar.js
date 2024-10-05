@@ -8,6 +8,10 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import Button from '@mui/material/Button';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -16,10 +20,10 @@ const Search = styled('div')(({ theme }) => ({
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginLeft: 0,
-  width: '100%',
+  marginLeft: theme.spacing(2),
+  marginRight: theme.spacing(2),
+  width: 'auto',
   [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
     width: 'auto',
   },
 }));
@@ -39,7 +43,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: '100%',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     [theme.breakpoints.up('sm')]: {
@@ -51,7 +54,26 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchAppBar() {
+export default function SearchAppBar({
+  setLoginSource,
+  handleClickOpen,
+  isLogin,
+  handleLogOut,
+  setSearchQuery,
+}) {
+  const navigate = useNavigate();
+
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSearchChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setSearchQuery(inputValue);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -69,19 +91,54 @@ export default function SearchAppBar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            sx={{
+              display: { xs: 'none', sm: 'inline-block' },
+            }}
           >
             Job Routing
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+          <form onSubmit={handleSearchSubmit}>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+                // value={inputValue}
+                onChange={handleSearchChange}
+              />
+            </Search>
+          </form>
+          <Box sx={{ flexGrow: 1 }} />{' '}
+          {isLogin ? (
+            <>
+              <AccountCircleIcon sx={{ margin: 1 }} />
+              <Box sx={{ display: 'flex' }}>
+                <Button color="inherit">Long Hoang Dinh</Button>
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    alert('Logging Out!');
+                    handleLogOut();
+                  }}
+                >
+                  Log Out
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <Button
+              color="inherit"
+              onClick={() => {
+                setLoginSource(false);
+                handleClickOpen();
+                navigate('/login');
+              }}
+            >
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </Box>
