@@ -8,7 +8,6 @@ import './App.css';
 import SignInForm from './components/SignInForm';
 import CenteredCard from './components/IndividualJobCard';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Navigate } from 'react-router-dom';
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(true);
